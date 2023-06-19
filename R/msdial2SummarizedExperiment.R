@@ -29,6 +29,6 @@ importMsdialTable <- function(tablefile){
         mutate(across(where(is.character), as.numeric))
 
     se <- SummarizedExperiment::SummarizedExperiment(assays = quantval_tbl,
-                                                     rowData = row_data,
+                                                     rowData = row_tbl,
                                                      colData = col_tbl)
 }
