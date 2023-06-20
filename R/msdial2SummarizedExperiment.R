@@ -1,9 +1,10 @@
+library(SummarizedExperiment)
 library(magrittr)
 library(dplyr)
-library(SummarizedExperiment)
-library(ggplot2)
 library(tidyr)
 library(tibble)
+library(ggplot2)
+
 
 msdial2se <- function(tablefile){
     tbl <- readr::read_delim(tablefile, delim = "\t", escape_double = FALSE,
@@ -35,6 +36,7 @@ msdial2se <- function(tablefile){
     se <- SummarizedExperiment::SummarizedExperiment(assays = quantval_tbl,
                                                      rowData = row_tbl,
                                                      colData = col_tbl)
+    return(se)
 }
 
 save_plot4inchikey <- function(se, inchikey){
@@ -45,7 +47,6 @@ save_plot4inchikey <- function(se, inchikey){
     
     tidytbl2barplot(tidytbl)
     ggsave(paste0("bar_", inchikey, ".png"))
-    
 }
 
 get_tidytbl4inchikey <- function(se, inchikey){
