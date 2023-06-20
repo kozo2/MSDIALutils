@@ -1,7 +1,11 @@
 library(magrittr)
 library(dplyr)
+library(SummarizedExperiment)
+library(ggplot2)
+library(tidyr)
+library(tibble)
 
-importMsdialTable <- function(tablefile){
+msdial2se <- function(tablefile){
     tbl <- readr::read_delim(tablefile, delim = "\t", escape_double = FALSE,
                              col_names = FALSE, trim_ws = TRUE)
 
@@ -31,4 +35,37 @@ importMsdialTable <- function(tablefile){
     se <- SummarizedExperiment::SummarizedExperiment(assays = quantval_tbl,
                                                      rowData = row_tbl,
                                                      colData = col_tbl)
+}
+
+save_plot4inchikey <- function(se, inchikey){
+    tidytbl <- get_tidytbl4inchikey(se, inchikey)
+    tidytbl2barplot(tidytbl)
+    ggsave(paste0(inchikey, ".png"))
+    tidytbl2boxplot(tidytbl)
+    ggsave(paste0(inchikey, ".png"))
+}
+
+get_tidytbl4inchikey <- function(se, inchikey){
+    rowDFrame <- rowData(se)
+    colDFrame <- colData(se)
+    asyTbl <- assay(se, 1)
+    
+    rowDF4inchikey <- rowDFrame[rowDFrame$INCHIKEY==inchikey, ]
+    asyTbl4inchikey <- asyTbl[rowDFrame$INCHIKEY==inchikey, ]
+    
+    tmp <- t(asyTbl4inchikey)
+    colnames(tmp) <- rowDF4inchikey$`Alignment ID`
+    tbl <- tibble::as_tibble(cbind(colDFrame, tmp))
+    tidytbl <- tidyr::pivot_longer(tbl, cols=where(is.numeric))
+    return(tidytbl)
+}
+
+tidytbl2boxplot <- function(tidytbl){
+    ggplot(tidytbl, aes(x=Class, y=value)) + 
+        geom_boxplot() +
+        facet_wrap(~name)
+}
+
+tidytbl2barplot <- function(tidytbl){
+    
 }
