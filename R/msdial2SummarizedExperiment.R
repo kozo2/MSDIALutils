@@ -5,7 +5,6 @@ library(tidyr)
 library(tibble)
 library(ggplot2)
 
-
 msdial2se <- function(tablefile){
     tbl <- readr::read_delim(tablefile, delim = "\t", escape_double = FALSE,
                              col_names = FALSE, trim_ws = TRUE)
