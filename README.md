@@ -1,1 +1,1 @@
-# msdial2SummarizedExperiment
+# MSDIALutils
