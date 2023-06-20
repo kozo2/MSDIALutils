@@ -39,10 +39,13 @@ msdial2se <- function(tablefile){
 
 save_plot4inchikey <- function(se, inchikey){
     tidytbl <- get_tidytbl4inchikey(se, inchikey)
-    tidytbl2barplot(tidytbl)
-    ggsave(paste0(inchikey, ".png"))
+    
     tidytbl2boxplot(tidytbl)
-    ggsave(paste0(inchikey, ".png"))
+    ggsave(paste0("box_", inchikey, ".png"))
+    
+    tidytbl2barplot(tidytbl)
+    ggsave(paste0("bar_", inchikey, ".png"))
+    
 }
 
 get_tidytbl4inchikey <- function(se, inchikey){
@@ -67,5 +70,7 @@ tidytbl2boxplot <- function(tidytbl){
 }
 
 tidytbl2barplot <- function(tidytbl){
-    
+    ggplot(tidytbl, aes(x=SampleId, y=value, fill=Class)) +
+        geom_bar(stat = "identity") +
+        facet_wrap(~name)
 }
