@@ -31,7 +31,7 @@ msdial2se <- function(tablefile){
     #col_data <- tibble::column_to_rownames(col_tbl, var = "SampleId")
 
     quantval_tbl <- quantval_cols[-c(1,2,3,4,5),] %>%
-        mutate(across(where(is.character), as.numeric))
+        dplyr::mutate(across(where(is.character), as.numeric))
 
     se <- SummarizedExperiment::SummarizedExperiment(assays = quantval_tbl,
                                                      rowData = row_tbl,
